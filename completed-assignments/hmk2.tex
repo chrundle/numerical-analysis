@@ -1,0 +1,312 @@
+\documentclass[8pt]{article}
+ 
+\usepackage[margin=.8in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{marvosym,enumerate,color,mathrsfs,graphicx,epstopdf}
+\usepackage{enumitem}
+\setenumerate{listparindent=\parindent}
+\def\cc{\color{blue}}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{courier}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{float}
+\hypersetup{
+	%colorlinks,
+	%citecolor=black,
+	%filecolor=black,
+	%linkcolor=blue,
+	%urlcolor=black
+}
+
+
+%\usepackage{multirow}
+
+%Line Numbering
+\usepackage[mathlines]{lineno}
+%\linenumbers
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+%\newcommand{\dell}{\partial}
+\newcommand{\abs}[1]{\left\lvert{#1}\right\rvert}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\M}{\mathscr{M}}
+\newcommand{\E}{\mathscr{E}}
+\newcommand{\B}{\mathscr{B}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\Ns}{\mathscr{N}}
+\newcommand{\nm}{\mathrel{\unlhd}}
+\newcommand{\stcomp}[1]{{#1}^{\mathsf{c}}}
+\newcommand{\closure}[1]{\overline{#1}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\norm}[1]{\left\lVert{#1}\right\rVert}
+\newcommand{\LR}[1]{\left\langle{#1}\right\rangle}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{remark}[theorem]{Remark(s)}
+\newtheorem*{remark*}{Remark(s)}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem{innerexercise}{Exercise}
+\newenvironment{exercise}[1]
+  {\renewcommand\theinnerexercise{#1}\innerexercise}
+  {\endinnerexercise}
+
+% Upper and lower integrals
+%\def\upint{\mathchoice%
+%    {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%  \int}
+%\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+
+\title{Numerical Analysis -- Homework 2}
+\author{James Diffenderfer}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+%\newpage
+
+\begin{exercise}{1}
+For $a > 0$ let $$g(x) = \frac{x^3 + 3 ax}{3x^2 + a}.$$
+\begin{enumerate}
+	\item[(a)] Show that the fixed points of $g$ are $0, \pm \sqrt{a}$.
+	\item[(b)] Show that $g$ is locally convergent at $\sqrt{a}$.
+	\item[(c)] Show that $g$ has a cubic rate of convergence at $\sqrt{a}$.
+	\item [(d)] Compute the asymptotic constant $$M = \lim_{n \to \infty} \frac{| \sqrt{a} - x_{n + 1}|}{| \sqrt{a} - x_n |^3}$$ where $x_n = g^{n} (x_0)$ and $x_0$ is chosen close enough to $\sqrt{a}$ so that $x_n \to \sqrt{a}$. Hint: Use the formulas for $g(x)$ and $M$ directly and \emph{not} the third derivative.
+\end{enumerate}
+\end{exercise}
+\begin{proof}[Proof of (a)]
+Evaluating $g(x)$ at $x = 0, \pm \sqrt{a}$ we find that $$g(0) = \frac{0}{a} = 0,$$ $$g \left( \sqrt{a} \right) = \frac{a^{3/2} + 3 a^{3/2}}{3a + a} = \frac{4 a^{3/2}}{4a} = \sqrt{a},$$ and $$g \left( -\sqrt{a} \right) = \frac{-a^{3/2} - 3 a^{3/2}}{3a + a} =  \frac{-4 a^{3/2}}{4a} = -\sqrt{a}.$$ Hence, $x = 0, \pm \sqrt{a}$ are fixed points of $g(x)$.
+\end{proof}
+
+\begin{proof}[Proof of (b)]
+Observe that $$g'(x) = \frac{(3x^2 + 3a) (3x^2 + a) - 6x (x^3 + 3ax)}{(3x^2 + a)^2} = \frac{3 x^4 - 6ax^2 + 3a^2}{(3x^2 + a)^2} = \frac{3 (x^2 - a)^2}{(3x^2 + a)^2}.$$ Note that, since $a > 0$, $3x^2 + a \neq 0$ for all $x$. Hence $g'(x) \in \mathcal{C} (\mathbb{R})$. Since $g'(\sqrt{a}) = 0$ and $g'(x) \in \mathcal{C} (\mathbb{R})$ there exists a $\delta > 0$ such that $|g'(x)| < 1$ for all $x \in \mathcal{B} (\sqrt{a}, \delta)$. Thus, by the contraction mapping theorem, $g(x)$ is locally convergent at $\sqrt{a}$. 
+\end{proof}
+
+\begin{proof}[Proof of (c)]
+Observe that $$g''(x) = \frac{48 ax (x^2 - a)}{(3x^2 + a)^3}.$$ Hence, $g'(\sqrt{a}) = g'' (\sqrt{a}) = 0$. Since $g \in \mathcal{C}^{3} (\mathbb{R})$, Taylor's Theorem expanded about $\sqrt{a}$ implies that there exists a $\xi$ between $x_n$ and $\sqrt{a}$ such that \begin{align}
+g(x_n) = g(\sqrt{a}) + \frac{g'''(\xi)}{6} (x_n - \sqrt{a})^3. \label{Prob1}
+\end{align}
+Since $x_{n + 1} = g(x_n)$ and $g(\sqrt{a}) = \sqrt{a}$, (\ref{Prob1}) implies that $$\frac{|x_{n + 1} - \sqrt{a}|}{|x_n - \sqrt{a}|^3} = \frac{| g''' (\xi)|}{6}.$$ Finally, since $g'''(\sqrt{a}) = \frac{3}{2a}$ we have that $$\lim_{n \to \infty} \frac{|x_{n + 1} - \sqrt{a}|}{|x_n - \sqrt{a}|^3} = \frac{g'''(\sqrt{a})}{3!} = \frac{3}{12 a} = \frac{1}{4a}.$$
+\end{proof}
+
+\begin{proof}[Proof of (d)]
+By considering the term $\sqrt{a} - x_{n + 1}$ we find that $$\sqrt{a} - x_{n + 1} = \sqrt{a} - g(x_n) = \sqrt{a} - \frac{x_{n}^{3} + 3 a x_n}{3x_{n}^2 + a} = \frac{3x_{n}^{2} \sqrt{a} + a^{3/2} - x_{n}^3 - 3 a x_n}{3x_{n}^2 + a} = \frac{(\sqrt{a} - x)^3}{3x_{n}^2 + a}.$$ Hence, $$M = \lim_{n \to \infty} \frac{|\sqrt{a} - x_{n+1}|}{|\sqrt{a} - x_{n}|^3} = \lim_{n \to \infty} \frac{|\sqrt{a} - x_n|^3}{|\sqrt{a} - x_n|^3 \ | 3 x_{n}^2 + a|} = \lim_{n \to \infty} \frac{1}{|3x_{n}^2 + a|} = \frac{1}{4a}.$$
+\end{proof}
+
+
+\begin{exercise}{2}
+	Let $f(x) = \cos(x) + \sin^{2} (50 x)$.
+	\begin{enumerate}
+		\item[(a)] Write a computer program to implement Newton's method for $f$.
+		\item[(b)] By doing numerical experiments, find out how close to the root $p = \frac{\pi}{2}$ an initial point $x_0$ needs to be in order to have the Newton iterates $x_n$ converge to $p = \frac{\pi}{2}$.
+		\item[(c)] Explain your results.
+	\end{enumerate}
+\end{exercise}
+\begin{proof}[Code, experiments, and results]
+The code is included on the final page of the homework assignment. I used C++ to implement Newton's method on a sampling of points from the interval $\left[ \frac{\pi}{2} - .1, \frac{\pi}{2} + .1 \right]$. The points sampled as initial guesses for Newton's method were $\frac{\pi}{2} - .1 + .0001n$, for integers $0 \leq n \leq 2000$. The program terminated if either $|x_k - \frac{\pi}{2}| < 1e-6$ or the number of steps exceeded 50. The program saved three sets of data points: 
+\begin{enumerate}
+	\item [(1)] Initial guesses $x_0$ which resulted in convergence to $\frac{\pi}{2}$ in less than 50 steps
+	\item [(2)] The number of steps resulting in convergence to $\frac{\pi}{2}$ for initial guesses $x_0$ corresponding to the data points from (1)
+	\item [(3)] Initial guesses $x_0$ which failed to converge to $\frac{\pi}{2}$ in less that 50 steps
+\end{enumerate}
+Two plots were then created in Python using 'matplotlib'. The first was a graph of the data from (1) versus the data from (2), Figure 1, and the second graph was created using the data from (3) to illustrate the initial guesses from $\left[ \frac{\pi}{2} - .1, \frac{\pi}{2} + .1 \right]$ which failed to converge, Figure 2. Two intervals near $\frac{\pi}{2}$ which resulted in convergence in at most 10 steps were $[1.5431, 1.5709]$ and $[1.5941, 1.5982]$. This asymmetric nature of the basin of $\frac{\pi}{2}$ can be accounted for by observing the graph of $f(x)$ in Figure 3. The graph in Figure 3 shows that $f(x)$ has another root very close to $\frac{\pi}{2}$ which accounts for points to the left of $\frac{\pi}{2}$ failing to converge to $\frac{\pi}{2}$. By observing Figures 1 and 2 we see that most points outside of these intervals fail to converge to $\frac{\pi}{2}$ in less than 50 steps. Based on these experimental results, it seems that $B = \mathcal{B} \left( \frac{\pi}{2}, .0001 \right)$ is the largest neighborhood about $\frac{\pi}{2}$ for which $x_0 \in B$ converge to $\frac{\pi}{2}$ using Newton's method.
+
+\begin{figure}[H]
+	\includegraphics[trim={6cm, 0, 5cm, 2cm}, clip, width=\textwidth]{conv_plot.png}
+	\vspace{-10mm}
+	\caption{Plot of initial guesses $x_0$ from $\left[ \frac{\pi}{2} - .1, \frac{\pi}{2} + .1 \right]$ which converged to $\frac{\pi}{2}$ using Newton's method in less than 50 steps verses the number of steps required for convergence.}
+	\label{Figure 1}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[trim={8.2cm, 12cm, 7cm, 2cm}, clip, width=\textwidth]{fail_plot.png}
+	\vspace{-8mm}
+	\caption{Plot of initial guesses $x_0$ from $\left[ \frac{\pi}{2} - .1, \frac{\pi}{2} + .1 \right]$ which failed to convergence to $\frac{\pi}{2}$ in less than 50 steps using Newton's method with tolerance $1e-6$.}
+	\label{Figure 2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[trim={6cm, 0, 5cm, 2cm}, clip, width=\textwidth]{func_plot.png}
+	\vspace{-8mm}
+	\caption{Plot of $f(x) = cos(x) + sin^2 (50 x)$ on the interval $[1.5627, 1.5787]$. The vertical dashed line intersecting the graph of $f$ at $y = 0$ is $x = \frac{\pi}{2}$.}
+	\label{Figure 3}
+\end{figure}
+\end{proof}
+
+\newpage
+
+\begin{exercise}{3}
+Let $$G(x, y) = \left( \frac{.25}{1 + (x + y)^2} , \frac{.25}{1 + (x - y)^2} \right).$$ Find a convex region $B$ with $G(B) \subset B$ and $\| DG \|_{\infty} \leq k < 1$ for some $k$ for all $(x, y) \in B$. Conclude then that $G$ has a unique fixed point in $B$.
+\end{exercise}
+
+\begin{proof}[Solution]
+Define $\displaystyle g_1 (x, y) = \frac{.25}{1 + (x + y)^2}$ and $\displaystyle g_2 (x, y) = \frac{.25}{1 + (x - y)^2}$. Observe that for all $r \in \mathbb{R}$, $$1 \leq 1 + r^2 \ \ \Leftrightarrow \ \ \frac{1}{1 + r^2} \leq 1 \ \ \Rightarrow \ \ g_1 (x, y) \leq \frac{1}{4} \ \text{and} \ g_2 (x, y) \leq \frac{1}{4}.$$ Hence, by taking $\displaystyle B = \left[ 0, \frac{1}{4} \right] \times \left[ 0, \frac{1}{4} \right]$, $B$ is convex and $G(B) \subset B$. Next, we have that $$\nabla g_1 = \left[ - \frac{(x + y)}{2 ( 1 + (x + y)^2)^2}, - \frac{(x + y)}{2 ( 1 + (x + y)^2)^2} \right] \ \ \text{and} \ \ \nabla g_2 = \left[ - \frac{(x - y)}{2 ( 1 + (x - y)^2)^2}, \frac{(x - y)}{2 ( 1 + (x - y)^2)^2} \right].$$ Hence, $$\| \nabla g_1 \|_1 = \frac{|x + y|}{( 1 + (x + y)^2)^2} \ \ \text{and} \ \ \| \nabla g_2 \|_1 = \frac{|x - y|}{( 1 + (x - y)^2)^2}.$$ Now for $(x, y) \in B$, it follows that $|x + y| \leq \frac{1}{2}$, $|x - y| \leq \frac{1}{4}$, $(1 + (x + y)^2)^2 > 1$, and $(1 + (x - y)^2)^2 > 1$. Thus, $\| \nabla g_1 \|_1 \leq \frac{1}{2}$ and $\| \nabla g_2 \|_1 \leq \frac{1}{4}$. We now have that $$\| DG \|_{\infty} = \max_{1 \leq n \leq 2} \| \nabla g_n \|_1 \leq \frac{1}{2}$$ which, by the Generalized Contraction Mapping Theorem, yields that $G$ has a unique fixed point $p \in B$.
+\end{proof}
+
+
+\begin{exercise}{4}
+Let $f(x) = \log (x)$, $x_0 = 1$, $x_1 = 1.75$, $x_2 = 2$. Find the \emph{total} error bound for the degree two interpolating polynomial $P_2 (x)$ with these nodes and $f$ on the interval $[1, 2]$, i.e. find a $K$ with $$\max_{t \in [1, 2]} |f(t) - P_2 (t)| \leq K.$$
+\end{exercise}
+
+\begin{proof}[Solution]
+The total error bound for the degree two interpolating polynomial $P_2 (x)$ on $[1, 2]$	is given by $$\max_{t \in [1, 2]} |f(t) - P_2 (t)| \leq \frac{1}{3!} \left\{ \max_{x \in [1, 2]} |f'''(x)| \right\} \left\{ \max_{t \in [1, 2]} |w (t)| \right\},$$ where $w (t) = (t - 1) (t - 1.75) (t - 2)$. Since $f'''(x) = 2 x^{-3}$ is decreasing on $[1, 2]$, we have that $$\max_{x \in [1, 2]} f'''(x) = f'''(1) = 2.$$ Next, observe that $$w'(t) = (t - 1.75) (t - 2) + (t - 1) (t - 2) + (t - 1) (t - 1.75) = 3t^2 - 9.5 t + 7.25.$$ Solving $w'(t) = 0$ using the quadratic formula yields the roots $$t_1 = \frac{9.5 - \sqrt{3.25}}{6} \approx 1.282871 \ \ \text{and} \ \ t_2 = \frac{9.5 + \sqrt{3.25}}{6} \approx 1.8837959.$$ Since $w(1) = w(2) = 0$, $|w(t_1)| \approx .094759452$ and $| w(t_2) | \approx .013740933$ we conclude that $$\max_{t \in [1, 2]} |w (t)| = |w(t_1)| = .094759452.$$ Thus, $$\max_{t \in [1, 2]} |f(t) - P_2 (t)| \leq \frac{1}{6} (2)(.094759452) \approx .031586484.$$ %.031667
+\end{proof}
+
+\end{document}
+
+
+%incorect idea for exercise 11.1
+\begin{proof}
+Suppose $A_2$ has rank $r$ and let $U_1 \Sigma_1 V_{1}^{*}$ and $U_2 \Sigma_2 V_{2}^{*}$ be singular value decompositions for $A_1$ and $A_2$ with singular values $\{ \sigma_1, \ldots, \sigma_n \}$ and $\{ \tau_1, \ldots, \tau_r, 0, \ldots, 0\}$, respectively. Additionally, let $\Sigma_{1}^{-1} = diag (1/\sigma_1, \ldots, 1/\sigma_n)$ and $\Sigma_{2}^{-1} = diag (1/\tau_1, \ldots, 1/\tau_r, 0, \ldots, 0)$. Since $A_{1}^{-1} = V_1 \Sigma_{1}^{-1} U_{1}^*$ is a singular value decomposition of $A_{1}^{-1}$, Theorem 5.3 yields that $\norm{A_{1}^{-1}}_{2} = 1/\sigma_n$. Now observe that 
+\begin{align}
+A^+ &= (A^* A)^{-1} A^* \nonumber \\
+&= \left( \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_{2}^* U_{2}^*
+\end{bmatrix} \begin{bmatrix}
+U_1 \Sigma_1 V_{1}^* \\
+U_2 \Sigma_{2} V_{2}^*
+\end{bmatrix} \right)^{-1} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{2} V_{1}^* + V_2 \Sigma_{2}^{*} \Sigma_{2} V_{2}^*
+\end{bmatrix}^{-1} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{-2} V_{1}^* \\
+V_2 (\Sigma_{2}^{*} \Sigma_{2})^{-1} V_{2}^*
+\end{bmatrix} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{-1} U_{1}^* \\
+V_2 (\Sigma_{2}^*)^{-1} U_{2}^*
+\end{bmatrix} \nonumber \tag{11.1}
+\end{align}
+Now suppose that $r < n$, where $r$ the number of nonzero singular values of $A_2$. Then for $e_n \in \R^{m}$ we have that $$\norm{A^+ e_n}_2 = \frac{1}{\sigma_n} = \norm{A_{1}^{-1}}_2.$$ If $r \geq n$ then define $\displaystyle v = \left( 0, \ldots, 0, \frac{1}{1 + \frac{\sigma_n}{\tau_n}}, 0, \ldots, 0 \right)^{\intercal}$, where the nonzero value is the $n$th coordinate of $v$. Then $$\norm{A^+ v}_2 = \left( \frac{1}{\sigma_n} + \frac{1}{\tau_n} \right) \frac{1}{1 + \frac{\sigma_n}{\tau_n}} = \frac{1}{\sigma_n} = \norm{A_{1}^{-1}}_2.$$ Since $\norm{e_n}_2 = 1$ and $\norm{A^+}_2 = \sup \{ \norm{A^+ x}_2 : x \in \R^{m}, \norm{x}_{2} = 1 \}$ we conclude that $\norm{A_{1}^{-1}}_2$ is an upper bound for $\norm{A^+}_2$.
+\end{proof}
+
+% Proof of formula for inverse of L_{m-1} \codts L_{1}
+    \begin{proof}[Old Solution]
+    	First define $\ell_{k} = [0 \ \cdots \ 0 \ \ell_{k + 1, k} \ \cdots \ \ell_{m, k}]^{\intercal}$ and $L_{k} = \ell_{k} e_{k}^*$. Then $L$ can be defined as $L = I - L_1 - \ldots - L_{m - 1}$ and hence $M = L^{-1} = (L_{m - 1} \cdots L_{2} L_{1})^{-1} = L_{1}^{-1} \cdots L_{m - 1}^{-1}$. Now observe that for each $1 \leq k \leq m - 1$ we have that 
+    	\begin{align*}
+    	L_{k} (I + \ell_{k} e_{k}^*) &= (I - \ell_{k} e_{k}^*) (I + \ell_{k} e_{k}^*) \\
+    	&= I + \ell_{k} e_{k}^* - \ell_{k} e_{k}^* + \ell_{k} e_{k}^* \ell_{k} e_{k}^* \\
+    	&= I + \ell_{k} \begin{bmatrix}
+    	0 \ \cdots \ 0 \ 1 \ 0 \ \cdots \ 0
+    	\end{bmatrix} \begin{bmatrix}
+    	0\\
+    	\vdots\\
+    	0\\
+    	\ell_{k+1, k}\\
+    	\vdots\\
+    	\ell_{m,k}
+    	\end{bmatrix} e_{k}^*\\
+    	&= I.
+    	\end{align*}
+    	Similarly, $(I + \ell_{k} e_{k}^*) L_{k} = I$. So we have that $L_{k}^{-1} = I + \ell_{k} e_{k}^*$. Next we consider the product $L_{1}^{-1} \cdots L_{m - 1}^{-1}$. We claim that 
+    	\begin{align}
+    	L_{1}^{-1} \cdots L_{k}^{-1} = I + \ell_{1} e_{1}^* + \ldots + \ell_{k} e_{k}^*, \tag{$\ast$}
+    	\end{align} 
+    	for $1 \leq k \leq m - 1$. We now prove that ($\ast$) holds by induction. First we observe that 
+    	\begin{align*}
+    	L_{1}^{-1} L_{2}^{-1} &= (I + \ell_{1} e_{1}^*) (I + \ell_{2} e_{2}^*) \\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^* + \ell_{1} e_{1}^* \ell_{2} e_{2}^* \\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^* + \ell_{1} \begin{bmatrix}
+    	1 \ 0 \ \cdots \ 0
+    	\end{bmatrix} \begin{bmatrix}
+    	0\\
+    	0\\
+    	\ell_{3, 2}\\
+    	\vdots\\
+    	\ell_{m, 2}\\
+    	\end{bmatrix} e_{k}^*\\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^*.
+    	\end{align*}
+    	Assuming now that ($\ast$) holds for an integer $k < m - 1$ we want to show it holds for $k + 1$. Clearly, 
+    	\begin{align*}
+    	L_{1}^{-1} \cdots L_{k}^{-1} L_{k+1}^{-1} &= (I + \ell_{1} e_{1}^*) (I + \ell_{k+1} e_{k+1}^*)\\
+    	&= I + \sum_{i= 1}^{k + 1} \ell_{i} e_{i}^* + \sum_{j = 1}^{k} \ell_{j} e_{j}^* \ell_{k+1} e_{k+1}^*\\
+    	&= I + \sum_{i= 1}^{k + 1} \ell_{i} e_{i}^*,
+    	\end{align*}
+    	where the last inequality holds due to $e_{j}^* \ell_{k+1} = 0$, for $1 \leq j \leq k$. Hence, we have that 
+    	\begin{align*}
+    	m_{ij} = \left\{ \begin{array}{ll}
+    	\delta_{ij} &: i \leq j\\
+    	\ell_{i, j} &: i > j
+    	\end{array}
+    	\right.
+    	\end{align*}
+    	where $\delta_{ij}$ is the Kronecker delta function.
+    \end{proof}
+    
+    
+    
+%incorrect idea for 15.2 (b)
+By Theorem 5.4, computing the singular values of $A$ is equivalent to computing the square root of the nonzero eigenvalues of $A^* A$. Since any algorithm for computing the eigenvalues of a matrix is unstable it follows that any algorithm for computing the singular vales of $A$ is unstable and, hence, not backward stable.
+
+For a more detailed explanation, we want a matrix $\tilde{A} = A + \delta A$ such that $$\tilde{\sigma}_{k} = \sigma_{k} (A + \delta A) \ \ \text{and} \ \ \frac{\| \delta A \|}{\| A \|} = O (\varepsilon_{machine}),$$ since this implies that $| \tilde{\sigma}_{k} = \sigma_{k}| = O \left( \| A \| \varepsilon_{machine} \right)$. Supposing we can compute the eigenvalues of $A^* A$ in a stable fashion we would have that $$| \tilde{\lambda}_{k} - \lambda_{k}| = O (\| A^* A \| \varepsilon_{machine}) = O (\| A \|^2 \varepsilon_{machine}).$$ By taking the square root of the eigenvalues we observe that $$| \tilde{\sigma}_{k} - \sigma_{k} | = O \left( \frac{| \tilde{\lambda}_{k} - \lambda_{k}|}{\sqrt{\lambda_k}} \right) = O \left( \frac{\| A \|^2}{\sigma_{k}} \varepsilon_{machine} \right).$$ Hence, the algorithm is not backward stable. Specifically, stability issues occur when some $\sigma_{k}$ is sufficiently smaller that $\| A \|^2$.
+
+%incorrect idea for 22.1
+\begin{proof}[Old failed attempt]
+	First, note that $\rho$ can be expressed as $$\rho = \frac{\max_{j} \|u_j \|_{\infty}}{\max_{j} \|a_{j}\|_{\infty}}.$$ For simplicity, let $i, j$ be such that $\max_{j} \|u_j \|_{\infty} = |u_{ij}$ and let $p, q$ be such that $\max_{j} \|a_{j}\|_{\infty} = |a_{pq}|$. Then
+	\begin{align*}
+	|u_{ij}| &= \norm{U e_j}_{\infty}\\
+	&= \norm{L^{-1} A e_j}_{\infty}\\
+	&= \norm{L^{-1} a_{j}}_{\infty}\\
+	&\leq \norm{\begin{bmatrix}
+		1 &0 &\cdots &0\\
+		1 &1 &\cdots &0\\
+		%	1 &1 &1 &\cdots &0\\
+		\vdots &\vdots &\ddots &\vdots\\
+		1 &1 &\cdots &1
+		\end{bmatrix} a_j}_{\infty} \ \ \ \ \ \ \ \ (\text{follows from $|\ell| \leq 1$ for all entries $\ell$ of $L^{-1}$})\\
+	&= \max_{1 \leq n \leq m} \left| \sum_{k = 1}^{n} a_{kj} \right|\\
+	&\leq \max_{1 \leq n \leq m} \sum_{k = 1}^{n} |a_{kj}|\\
+	&\leq \max_{1 \leq n \leq m} \sum_{k = 1}^{n} |a_{pq}|\\
+	&= 2^{m-1} |a_{pq}|,
+	\end{align*}
+	which concludes the proof.
+\end{proof}
+
+
+
+
+%incorrect idea for 25.1
+Let $D$ be the diagonal matrix containing the diagonal entries of $A$ and $S$ be a matrix whose sub- and superdiagonal entries are the sub- and superdiagonal entries of $A$. Since all of the sub- and superdiagonal entries of $A$ are nonzero and $A \in \C^{m \times m}$ we have that $rank(S) = m - 1$. Then 
+\begin{align*}
+rank (A - \lambda I) &= rank \left( (D - \lambda I) + S \right)\\
+&= \max \{ rank (D - \lambda I), rank (S) \}\\
+&\geq rank (S)\\
+&= m - 1
+\end{align*}

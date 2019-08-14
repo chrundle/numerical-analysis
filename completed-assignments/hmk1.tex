@@ -1,0 +1,289 @@
+\documentclass[8pt]{article}
+ 
+\usepackage[margin=.8in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{marvosym,enumerate,color,mathrsfs,graphicx,epstopdf}
+\usepackage{enumitem}
+\setenumerate{listparindent=\parindent}
+\def\cc{\color{blue}}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{courier}
+\usepackage{fullpage}
+\hypersetup{
+	%colorlinks,
+	%citecolor=black,
+	%filecolor=black,
+	%linkcolor=blue,
+	%urlcolor=black
+}
+
+
+%\usepackage{multirow}
+
+%Line Numbering
+\usepackage[mathlines]{lineno}
+%\linenumbers
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+%\newcommand{\dell}{\partial}
+\newcommand{\abs}[1]{\left\lvert{#1}\right\rvert}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\M}{\mathscr{M}}
+\newcommand{\E}{\mathscr{E}}
+\newcommand{\B}{\mathscr{B}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\Ns}{\mathscr{N}}
+\newcommand{\nm}{\mathrel{\unlhd}}
+\newcommand{\stcomp}[1]{{#1}^{\mathsf{c}}}
+\newcommand{\closure}[1]{\overline{#1}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\norm}[1]{\left\lVert{#1}\right\rVert}
+\newcommand{\LR}[1]{\left\langle{#1}\right\rangle}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{definition*}{Definition}
+\newtheorem{remark}[theorem]{Remark(s)}
+\newtheorem*{remark*}{Remark(s)}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem{innerexercise}{Exercise}
+\newenvironment{exercise}[1]
+  {\renewcommand\theinnerexercise{#1}\innerexercise}
+  {\endinnerexercise}
+
+% Upper and lower integrals
+%\def\upint{\mathchoice%
+%    {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+%  \int}
+%\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+
+\title{Numerical Analysis -- HW 1}
+\author{James Diffenderfer}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+%\newpage
+
+\begin{exercise}{1}
+Let $g(x) = 2^{-x - 1}$.
+\begin{enumerate}
+	\item[(a)] Show that $g \left( [0, 1] \right) \subset [0, 1]$.
+	\item[(b)] Show that $g$ is a contraction on $[0, 1]$.
+	\item[(c)] Compute the smallest possible contraction constant $k$ for $g$ on $[0, 1]$ and estimate how many iterates $n$ it will take for $g^{n} (0)$ to be within $10^{-4}$ of the fixed point.
+\end{enumerate}
+\end{exercise}
+\begin{proof}[Proof of (a)]
+Since $g' (x) = - \ln (2) 2^{-x - 1} < 0$ for all $x$, it follows that $g$ is decreasing on $[0, 1]$. This fact combined with $g(0) = \frac{1}{2}$ and $g(1) = \frac{1}{4}$ yields that $g \left( [0, 1] \right) \subseteq [\frac{1}{4}, \frac{1}{2}] \subset [0, 1]$.
+\end{proof}
+
+\begin{proof}[Proof of (b)]
+	Since $g'' (x) = \left(\ln (2)\right)^2 2^{-x - 1} > 0$ for all $x$, it follows that $g$ is increasing on $[0, 1]$. Combining this information with $g'(0) = -\frac{\ln 2}{2}$ and $g(1) = - \frac{\ln 2}{4}$ yields that $g \left( [0, 1] \right) \subseteq [- \frac{\ln 2}{2}, - \frac{\ln 2}{4}] \subset (-1, 0)$. So $| g'(x) | < 1$ for all $x \in [0, 1]$ implying that $g$ is a contraction on $[0, 1]$ by the Contraction Mapping Theorem.
+\end{proof}
+
+\begin{proof}[Proof of (c)]
+	From part $(b)$, the smallest possible contraction constant for $g$ on $[0, 1]$ is $k = - \frac{\ln 2}{2}$. By the Contraction Mapping Theorem we have that there is a unique fixed point $p \in [0, 1]$ such that $$| g^n (x) - p | \leq \frac{k^n}{1 - k} | g(x) - x |,$$ for all $x \in [0, 1]$. Taking $x = 0$ we find that $$| g^n (0) - p | \leq \frac{k^n}{1 - k} | g(0) | = \frac{\left( \frac{\ln 2}{2}\right)^n}{2 \left(1 - \frac{\ln 2}{2} \right)}.$$ Based on this estimate, $| g^8 (0) - p | \leq 1.6 \times 10^{-4}$ and $| g^9 (0) - p | \leq 5.52 \times 10^{-5}$ so $| g^n (0) - p | \leq  10^{-4}$ provided for $n \geq 9$.
+\end{proof}
+
+\begin{exercise}{2}
+	Let $f(x) = \ln (1 - x)$.
+	\begin{enumerate}
+		\item[(a)] Estimate the error in using the second order Taylor polynomial $T_2$ expanded about zero for $f$ to compute $\ln (.9)$.
+		\item[(b)] Compute $T_2 (.1)$.
+		\item[(c)] Compute the actual error in using $T_2 (.1)$ to compute $\ln (.9)$.
+		\item[(d)] Compare the actual error with your error estimate.
+	\end{enumerate}
+\end{exercise}
+\begin{proof}[Proof of (a)]
+By Taylor's theorem, there exists $\xi$ between $0$ and $.1$ such that $f(.1) - T_2 (.1) = \frac{1}{6} (.1)^3 f'''(\xi)$. Since $f'''(x) = -\frac{2}{(1 - x)^3}$, we have that $|f'''(x)| \in [2, \frac{2}{.729}]$ for $x \in [0, .1]$. Hence, $$|f(.1) - T_2 (.1)| = \frac{1}{6} (.1)^3 |f'''(\xi)| \leq \frac{1}{3} \frac{(.1)^3}{(.9)^3} = \frac{1}{3^7} \approx .00045724.$$
+\end{proof}
+
+\begin{proof}[Computation in (b)]
+Since $f' (x) = -1/(1 - x)$ and $f'' (x) = -1/(1 - x)^2$ we have that the second order Taylor polynomial expanded about zero is $$T_2 (x) = \ln 1 - x - \frac{1}{2} x^2 = -x - \frac{1}{2} x^2.$$ Hence, $T_2 (.1) = - (.1) - \frac{1}{2} (.1)^2 = -.1 - .005 = -.105$.
+\end{proof}
+
+\begin{proof}[Computation in (c)]
+$Actual \ Error = | \ln (.9) - T_2(.1) | \approx |-.10536051565 + .105 | = .00036051565$.
+\end{proof}
+
+\begin{proof}[Comparison in (d)]
+$| Error \ Estimate - Actual \ Error | = | .00036051565 - .00045724 | = .00009672435$.
+\end{proof}
+
+\begin{exercise}{3}
+Assume that $g \in C [a,b]$, $g(a) > a$ and $g (b) < b$. Show that $g$ has a fixed point in $[a, b]$.
+\end{exercise}
+\begin{proof}
+Let $f(x) = g(x) - x$. By our hypothesis we have that $$g(a) > a \Leftrightarrow g(a) - a > 0 \Leftrightarrow f(a) > 0,$$ and $$g(b) < b \Leftrightarrow g(b) - b < 0 \Leftrightarrow f(b) < 0.$$ Since $f \in C[a,b]$, by the Intermediate Value Theorem there exists a point $p \in [a, b]$ such that $f(p) = 0$, or equivalently $g(p) = p$.
+\end{proof}
+
+\begin{exercise}{4}
+Write a computer program that implements the midpoint method and use it to compute \emph{all} the roots of $f(x) = x^3 - 6.1 x^2 + 10.8 x - 5.8$ to within an accuracy of $10^{-5}$.	
+\end{exercise}
+\begin{proof}[Solution]
+Code and output on final page of homework. The assignment was coded using C and compiled using the command: ``gcc -o midpoint\_test midpoint.c".
+\end{proof}
+
+\begin{exercise}{5}
+Assume $g \in C^2[a, b]$ with $g \left( [a, b] \right) \subset [a,b]$ and a fixed point $p \in (a, b)$. Assume that $g' (p) = 0$. Show using the Taylor theorem with remainder expanded about $p$ that for any $x \in [a, b]$ with $x \neq p$ $$\frac{|g(x) - p|}{|x - p|^2} \leq M,$$ where $M = \max \{ |g''(z)| : z \in [a, b] \}/2$.
+\end{exercise}
+\begin{proof}
+Fix $x \in [a, b] \setminus \{ p \}$. By Taylor's Theorem, there exists $\xi$ between $x$ and $p$ such that $$g(x) = g(p) + g'(p) (x - p) + \frac{1}{2} g''(\xi) (x - p)^2.$$ Since, by our hypotheses, $g(p) = p$, $g'(p) = 0$, and $x \neq p$ we now have that $$\frac{g(x) - p}{(x - p)^2} = \frac{1}{2} g''(\xi).$$ Taking the absolute value of both sides yields $$\frac{|g(x) - p|}{|x - p|^2} = \frac{1}{2} |g''(\xi)| \leq M.$$ Since $x$ was taken to be arbitrary, the inequality holds for all $x \in [a,b] \setminus \{ p \}$.
+\end{proof}
+
+\end{document}
+
+
+%incorect idea for exercise 11.1
+\begin{proof}
+Suppose $A_2$ has rank $r$ and let $U_1 \Sigma_1 V_{1}^{*}$ and $U_2 \Sigma_2 V_{2}^{*}$ be singular value decompositions for $A_1$ and $A_2$ with singular values $\{ \sigma_1, \ldots, \sigma_n \}$ and $\{ \tau_1, \ldots, \tau_r, 0, \ldots, 0\}$, respectively. Additionally, let $\Sigma_{1}^{-1} = diag (1/\sigma_1, \ldots, 1/\sigma_n)$ and $\Sigma_{2}^{-1} = diag (1/\tau_1, \ldots, 1/\tau_r, 0, \ldots, 0)$. Since $A_{1}^{-1} = V_1 \Sigma_{1}^{-1} U_{1}^*$ is a singular value decomposition of $A_{1}^{-1}$, Theorem 5.3 yields that $\norm{A_{1}^{-1}}_{2} = 1/\sigma_n$. Now observe that 
+\begin{align}
+A^+ &= (A^* A)^{-1} A^* \nonumber \\
+&= \left( \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_{2}^* U_{2}^*
+\end{bmatrix} \begin{bmatrix}
+U_1 \Sigma_1 V_{1}^* \\
+U_2 \Sigma_{2} V_{2}^*
+\end{bmatrix} \right)^{-1} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{2} V_{1}^* + V_2 \Sigma_{2}^{*} \Sigma_{2} V_{2}^*
+\end{bmatrix}^{-1} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{-2} V_{1}^* \\
+V_2 (\Sigma_{2}^{*} \Sigma_{2})^{-1} V_{2}^*
+\end{bmatrix} \begin{bmatrix}
+V_1 \Sigma_1 U_{1}^* &V_2 \Sigma_2 U_{2}^*
+\end{bmatrix} \nonumber \\ 
+&= \begin{bmatrix}
+V_1 \Sigma_{1}^{-1} U_{1}^* \\
+V_2 (\Sigma_{2}^*)^{-1} U_{2}^*
+\end{bmatrix} \nonumber \tag{11.1}
+\end{align}
+Now suppose that $r < n$, where $r$ the number of nonzero singular values of $A_2$. Then for $e_n \in \R^{m}$ we have that $$\norm{A^+ e_n}_2 = \frac{1}{\sigma_n} = \norm{A_{1}^{-1}}_2.$$ If $r \geq n$ then define $\displaystyle v = \left( 0, \ldots, 0, \frac{1}{1 + \frac{\sigma_n}{\tau_n}}, 0, \ldots, 0 \right)^{\intercal}$, where the nonzero value is the $n$th coordinate of $v$. Then $$\norm{A^+ v}_2 = \left( \frac{1}{\sigma_n} + \frac{1}{\tau_n} \right) \frac{1}{1 + \frac{\sigma_n}{\tau_n}} = \frac{1}{\sigma_n} = \norm{A_{1}^{-1}}_2.$$ Since $\norm{e_n}_2 = 1$ and $\norm{A^+}_2 = \sup \{ \norm{A^+ x}_2 : x \in \R^{m}, \norm{x}_{2} = 1 \}$ we conclude that $\norm{A_{1}^{-1}}_2$ is an upper bound for $\norm{A^+}_2$.
+\end{proof}
+
+% Proof of formula for inverse of L_{m-1} \codts L_{1}
+    \begin{proof}[Old Solution]
+    	First define $\ell_{k} = [0 \ \cdots \ 0 \ \ell_{k + 1, k} \ \cdots \ \ell_{m, k}]^{\intercal}$ and $L_{k} = \ell_{k} e_{k}^*$. Then $L$ can be defined as $L = I - L_1 - \ldots - L_{m - 1}$ and hence $M = L^{-1} = (L_{m - 1} \cdots L_{2} L_{1})^{-1} = L_{1}^{-1} \cdots L_{m - 1}^{-1}$. Now observe that for each $1 \leq k \leq m - 1$ we have that 
+    	\begin{align*}
+    	L_{k} (I + \ell_{k} e_{k}^*) &= (I - \ell_{k} e_{k}^*) (I + \ell_{k} e_{k}^*) \\
+    	&= I + \ell_{k} e_{k}^* - \ell_{k} e_{k}^* + \ell_{k} e_{k}^* \ell_{k} e_{k}^* \\
+    	&= I + \ell_{k} \begin{bmatrix}
+    	0 \ \cdots \ 0 \ 1 \ 0 \ \cdots \ 0
+    	\end{bmatrix} \begin{bmatrix}
+    	0\\
+    	\vdots\\
+    	0\\
+    	\ell_{k+1, k}\\
+    	\vdots\\
+    	\ell_{m,k}
+    	\end{bmatrix} e_{k}^*\\
+    	&= I.
+    	\end{align*}
+    	Similarly, $(I + \ell_{k} e_{k}^*) L_{k} = I$. So we have that $L_{k}^{-1} = I + \ell_{k} e_{k}^*$. Next we consider the product $L_{1}^{-1} \cdots L_{m - 1}^{-1}$. We claim that 
+    	\begin{align}
+    	L_{1}^{-1} \cdots L_{k}^{-1} = I + \ell_{1} e_{1}^* + \ldots + \ell_{k} e_{k}^*, \tag{$\ast$}
+    	\end{align} 
+    	for $1 \leq k \leq m - 1$. We now prove that ($\ast$) holds by induction. First we observe that 
+    	\begin{align*}
+    	L_{1}^{-1} L_{2}^{-1} &= (I + \ell_{1} e_{1}^*) (I + \ell_{2} e_{2}^*) \\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^* + \ell_{1} e_{1}^* \ell_{2} e_{2}^* \\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^* + \ell_{1} \begin{bmatrix}
+    	1 \ 0 \ \cdots \ 0
+    	\end{bmatrix} \begin{bmatrix}
+    	0\\
+    	0\\
+    	\ell_{3, 2}\\
+    	\vdots\\
+    	\ell_{m, 2}\\
+    	\end{bmatrix} e_{k}^*\\
+    	&= I + \ell_{1} e_{1}^* + \ell_{2} e_{2}^*.
+    	\end{align*}
+    	Assuming now that ($\ast$) holds for an integer $k < m - 1$ we want to show it holds for $k + 1$. Clearly, 
+    	\begin{align*}
+    	L_{1}^{-1} \cdots L_{k}^{-1} L_{k+1}^{-1} &= (I + \ell_{1} e_{1}^*) (I + \ell_{k+1} e_{k+1}^*)\\
+    	&= I + \sum_{i= 1}^{k + 1} \ell_{i} e_{i}^* + \sum_{j = 1}^{k} \ell_{j} e_{j}^* \ell_{k+1} e_{k+1}^*\\
+    	&= I + \sum_{i= 1}^{k + 1} \ell_{i} e_{i}^*,
+    	\end{align*}
+    	where the last inequality holds due to $e_{j}^* \ell_{k+1} = 0$, for $1 \leq j \leq k$. Hence, we have that 
+    	\begin{align*}
+    	m_{ij} = \left\{ \begin{array}{ll}
+    	\delta_{ij} &: i \leq j\\
+    	\ell_{i, j} &: i > j
+    	\end{array}
+    	\right.
+    	\end{align*}
+    	where $\delta_{ij}$ is the Kronecker delta function.
+    \end{proof}
+    
+    
+    
+%incorrect idea for 15.2 (b)
+By Theorem 5.4, computing the singular values of $A$ is equivalent to computing the square root of the nonzero eigenvalues of $A^* A$. Since any algorithm for computing the eigenvalues of a matrix is unstable it follows that any algorithm for computing the singular vales of $A$ is unstable and, hence, not backward stable.
+
+For a more detailed explanation, we want a matrix $\tilde{A} = A + \delta A$ such that $$\tilde{\sigma}_{k} = \sigma_{k} (A + \delta A) \ \ \text{and} \ \ \frac{\| \delta A \|}{\| A \|} = O (\varepsilon_{machine}),$$ since this implies that $| \tilde{\sigma}_{k} = \sigma_{k}| = O \left( \| A \| \varepsilon_{machine} \right)$. Supposing we can compute the eigenvalues of $A^* A$ in a stable fashion we would have that $$| \tilde{\lambda}_{k} - \lambda_{k}| = O (\| A^* A \| \varepsilon_{machine}) = O (\| A \|^2 \varepsilon_{machine}).$$ By taking the square root of the eigenvalues we observe that $$| \tilde{\sigma}_{k} - \sigma_{k} | = O \left( \frac{| \tilde{\lambda}_{k} - \lambda_{k}|}{\sqrt{\lambda_k}} \right) = O \left( \frac{\| A \|^2}{\sigma_{k}} \varepsilon_{machine} \right).$$ Hence, the algorithm is not backward stable. Specifically, stability issues occur when some $\sigma_{k}$ is sufficiently smaller that $\| A \|^2$.
+
+%incorrect idea for 22.1
+\begin{proof}[Old failed attempt]
+	First, note that $\rho$ can be expressed as $$\rho = \frac{\max_{j} \|u_j \|_{\infty}}{\max_{j} \|a_{j}\|_{\infty}}.$$ For simplicity, let $i, j$ be such that $\max_{j} \|u_j \|_{\infty} = |u_{ij}$ and let $p, q$ be such that $\max_{j} \|a_{j}\|_{\infty} = |a_{pq}|$. Then
+	\begin{align*}
+	|u_{ij}| &= \norm{U e_j}_{\infty}\\
+	&= \norm{L^{-1} A e_j}_{\infty}\\
+	&= \norm{L^{-1} a_{j}}_{\infty}\\
+	&\leq \norm{\begin{bmatrix}
+		1 &0 &\cdots &0\\
+		1 &1 &\cdots &0\\
+		%	1 &1 &1 &\cdots &0\\
+		\vdots &\vdots &\ddots &\vdots\\
+		1 &1 &\cdots &1
+		\end{bmatrix} a_j}_{\infty} \ \ \ \ \ \ \ \ (\text{follows from $|\ell| \leq 1$ for all entries $\ell$ of $L^{-1}$})\\
+	&= \max_{1 \leq n \leq m} \left| \sum_{k = 1}^{n} a_{kj} \right|\\
+	&\leq \max_{1 \leq n \leq m} \sum_{k = 1}^{n} |a_{kj}|\\
+	&\leq \max_{1 \leq n \leq m} \sum_{k = 1}^{n} |a_{pq}|\\
+	&= 2^{m-1} |a_{pq}|,
+	\end{align*}
+	which concludes the proof.
+\end{proof}
+
+
+
+
+%incorrect idea for 25.1
+Let $D$ be the diagonal matrix containing the diagonal entries of $A$ and $S$ be a matrix whose sub- and superdiagonal entries are the sub- and superdiagonal entries of $A$. Since all of the sub- and superdiagonal entries of $A$ are nonzero and $A \in \C^{m \times m}$ we have that $rank(S) = m - 1$. Then 
+\begin{align*}
+rank (A - \lambda I) &= rank \left( (D - \lambda I) + S \right)\\
+&= \max \{ rank (D - \lambda I), rank (S) \}\\
+&\geq rank (S)\\
+&= m - 1
+\end{align*}
